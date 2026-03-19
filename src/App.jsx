@@ -1,5 +1,4 @@
 import React, { useMemo, useState } from "react";
-import { motion } from "framer-motion";
 import {
   AlertTriangle,
   ArrowLeft,
@@ -618,10 +617,7 @@ export default function CostcoFactoryScoringQuoteDashboard() {
                   <KPI title="最低总报价" value={formatMoney(summary.bestQuote)} hint="当前产品最低完整报价" icon={<WalletCards className="h-5 w-5" />} />
                 </div>
 
-                <motion.section
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="rounded-[34px] border border-white/80 bg-white/76 p-5 shadow-[0_18px_60px_rgba(15,23,42,0.08)] backdrop-blur-2xl"
+                <section className="rounded-[34px] border border-white/80 bg-white/76 p-5 shadow-[0_18px_60px_rgba(15,23,42,0.08)] backdrop-blur-2xl"
                 >
                   <div className="flex items-center justify-between gap-4">
                     <div>
@@ -639,7 +635,7 @@ export default function CostcoFactoryScoringQuoteDashboard() {
                       <FactoryCard key={item.id} item={item} onOpen={() => openDetails(item.id)} />
                     ))}
                   </div>
-                </motion.section>
+                </section>
 
                 <section className="rounded-[34px] border border-white/80 bg-white/76 p-5 shadow-[0_18px_60px_rgba(15,23,42,0.08)] backdrop-blur-2xl">
                   <div className="flex items-center justify-between gap-4">
@@ -717,10 +713,7 @@ export default function CostcoFactoryScoringQuoteDashboard() {
                 </div>
 
                 <div className="grid grid-cols-1 gap-6 2xl:grid-cols-[0.92fr_1.08fr]">
-                  <motion.section
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="rounded-[34px] border border-white/80 bg-white/76 p-5 shadow-[0_18px_60px_rgba(15,23,42,0.08)] backdrop-blur-2xl"
+                  <section className="rounded-[34px] border border-white/80 bg-white/76 p-5 shadow-[0_18px_60px_rgba(15,23,42,0.08)] backdrop-blur-2xl"
                   >
                     <div className="flex items-center justify-between">
                       <div className="text-lg font-semibold text-slate-900">审厂模块雷达</div>
@@ -740,13 +733,9 @@ export default function CostcoFactoryScoringQuoteDashboard() {
                         </RadarChart>
                       </ResponsiveContainer>
                     </div>
-                  </motion.section>
+                  </section>
 
-                  <motion.section
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.05 }}
-                    className="rounded-[34px] border border-white/80 bg-white/76 p-5 shadow-[0_18px_60px_rgba(15,23,42,0.08)] backdrop-blur-2xl"
+                  <section className="rounded-[34px] border border-white/80 bg-white/76 p-5 shadow-[0_18px_60px_rgba(15,23,42,0.08)] backdrop-blur-2xl"
                   >
                     <div className="text-lg font-semibold text-slate-900">符合审厂标准的各项数据</div>
                     <div className="mt-1 text-sm text-slate-500">每个模块分数对应当前工厂的 Costco 审厂准备度。</div>
@@ -772,7 +761,7 @@ export default function CostcoFactoryScoringQuoteDashboard() {
                         </div>
                       ))}
                     </div>
-                  </motion.section>
+                  </section>
                 </div>
 
                 <div className="grid grid-cols-1 gap-6 2xl:grid-cols-[0.92fr_1.08fr]">
