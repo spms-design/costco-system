@@ -15,15 +15,6 @@ import {
   Sparkles,
   WalletCards,
 } from "lucide-react";
-import {
-  PolarAngleAxis,
-  PolarGrid,
-  PolarRadiusAxis,
-  Radar,
-  RadarChart,
-  ResponsiveContainer,
-  Tooltip,
-} from "recharts";
 
 const products = [
   {
@@ -448,19 +439,6 @@ export default function CostcoFactoryScoringQuoteDashboard() {
     return { green, yellow, red, total: productFactories.length, bestQuote };
   }, [productFactories]);
 
-  const radarData = selectedFactory
-    ? [
-        { subject: "供应链", value: selectedFactory.modules.supplyChain },
-        { subject: "文件", value: selectedFactory.modules.documentation },
-        { subject: "童工", value: selectedFactory.modules.childLabor },
-        { subject: "强迫劳动", value: selectedFactory.modules.forcedLabor },
-        { subject: "工资工时", value: selectedFactory.modules.wagesHours },
-        { subject: "健康安全", value: selectedFactory.modules.healthSafety },
-        { subject: "申诉", value: selectedFactory.modules.grievance },
-        { subject: "环境", value: selectedFactory.modules.environment },
-        { subject: "审计伦理", value: selectedFactory.modules.auditEthics },
-      ]
-    : [];
 
   const moduleScoreCards = selectedFactory
     ? moduleLabels.map((module) => ({
@@ -713,25 +691,35 @@ export default function CostcoFactoryScoringQuoteDashboard() {
                 </div>
 
                 <div className="grid grid-cols-1 gap-6 2xl:grid-cols-[0.92fr_1.08fr]">
-                  <section className="rounded-[34px] border border-white/80 bg-white/76 p-5 shadow-[0_18px_60px_rgba(15,23,42,0.08)] backdrop-blur-2xl"
-                  >
+                  <section className="rounded-[34px] border border-white/80 bg-white/76 p-5 shadow-[0_18px_60px_rgba(15,23,42,0.08)] backdrop-blur-2xl">
                     <div className="flex items-center justify-between">
-                      <div className="text-lg font-semibold text-slate-900">审厂模块雷达</div>
+                      <div>
+                        <div className="text-lg font-semibold text-slate-900">审厂模块总览</div>
+                        <div className="mt-1 text-sm text-slate-500">用条形进度查看各模块达标程度，不再依赖额外图表库。</div>
+                      </div>
                       <div className={cn("inline-flex items-center gap-1 rounded-full border px-3 py-1 text-xs font-medium", statusMeta[selectedFactory.status].badge)}>
                         {statusMeta[selectedFactory.status].icon}
                         {statusMeta[selectedFactory.status].label}
                       </div>
                     </div>
-                    <div className="mt-4 h-80">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <RadarChart data={radarData}>
-                          <PolarGrid />
-                          <PolarAngleAxis dataKey="subject" tick={{ fontSize: 12 }} />
-                          <PolarRadiusAxis domain={[0, 100]} tick={false} />
-                          <Radar dataKey="value" fillOpacity={0.3} />
-                          <Tooltip />
-                        </RadarChart>
-                      </ResponsiveContainer>
+                    <div className="mt-5 space-y-4">
+                      {moduleScoreCards.map((item) => (
+                        <div key={`overview-${item.label}`}>
+                          <div className="mb-1 flex items-center justify-between text-sm">
+                            <span className="font-medium text-slate-700">{item.label}</span>
+                            <span className="text-slate-600">{item.score} / 100</span>
+                          </div>
+                          <div className="h-2.5 rounded-full bg-slate-200">
+                            <div
+                              className={cn(
+                                "h-2.5 rounded-full",
+                                item.status === "green" ? "bg-emerald-500" : item.status === "yellow" ? "bg-amber-500" : "bg-rose-500"
+                              )}
+                              style={{ width: `${item.score}%` }}
+                            />
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </section>
 
