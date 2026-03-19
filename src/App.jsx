@@ -26,61 +26,7 @@ import {
   Tooltip,
 } from "recharts";
 
-type LightStatus = "green" | "yellow" | "red" | "gray";
-type PriceMode = "factory" | "external";
-type ViewMode = "home" | "detail";
-
-type AuditModules = {
-  supplyChain: number;
-  documentation: number;
-  childLabor: number;
-  forcedLabor: number;
-  wagesHours: number;
-  healthSafety: number;
-  grievance: number;
-  environment: number;
-  auditEthics: number;
-};
-
-type Quote = {
-  fabrics: { name: string; spec: string; unitCost: number; usage: number }[];
-  laborCost: number;
-  accessoriesCost: number;
-  packagingMode: PriceMode;
-  packagingCost: number;
-  remarks: string;
-};
-
-type FactoryItem = {
-  id: string;
-  name: string;
-  city: string;
-  country: string;
-  product: string;
-  status: LightStatus;
-  totalScore: number;
-  hardFail: boolean;
-  hardFailReasons: string[];
-  modules: AuditModules;
-  quote: Quote;
-  mandatoryDocsRate: number;
-  followUpRequired: boolean;
-  lastAuditDate: string;
-  leadTimeDays: number;
-};
-
-type Product = {
-  id: string;
-  name: string;
-  sku: string;
-  category: string;
-  targetQty: number;
-  fabricsRequired: string[];
-  description: string;
-  auditFocus: string[];
-};
-
-const products: Product[] = [
+const products = [
   {
     id: "p1",
     name: "防晒冰袖 Pro",
@@ -88,7 +34,8 @@ const products: Product[] = [
     category: "防紫外线配件",
     targetQty: 50000,
     fabricsRequired: ["冰丝主布", "弹力网眼布", "防滑硅胶带"],
-    description: "用于韩国及美国渠道的高标准防晒配件，系统将同时比较工厂是否满足 Costco 审厂标准，以及这款产品的完整加工报价。",
+    description:
+      "用于韩国及美国渠道的高标准防晒配件，系统将同时比较工厂是否满足 Costco 审厂标准，以及这款产品的完整加工报价。",
     auditFocus: ["分包透明度", "工资工时", "消防与健康安全", "资料完整率", "报价竞争力"],
   },
   {
@@ -98,12 +45,13 @@ const products: Product[] = [
     category: "户外防晒",
     targetQty: 80000,
     fabricsRequired: ["凉感针织布", "透气网布"],
-    description: "轻量型户外防晒产品，适合做第二产品线储备工厂比较，重点看交期、工时合规和整体报价结构。",
+    description:
+      "轻量型户外防晒产品，适合做第二产品线储备工厂比较，重点看交期、工时合规和整体报价结构。",
     auditFocus: ["工时与休息日", "外协与分包", "文件记录", "交期稳定性"],
   },
 ];
 
-const factoriesSeed: FactoryItem[] = [
+const factoriesSeed = [
   {
     id: "f1",
     name: "青岛华腾工厂",
@@ -295,7 +243,7 @@ const factoriesSeed: FactoryItem[] = [
   },
 ];
 
-const statusMeta: Record<LightStatus, { label: string; dot: string; badge: string; icon: React.ReactNode }> = {
+const statusMeta = {
   green: {
     label: "绿灯 / 可推进",
     dot: "bg-emerald-500",
@@ -322,7 +270,7 @@ const statusMeta: Record<LightStatus, { label: string; dot: string; badge: strin
   },
 };
 
-const moduleLabels: Array<{ key: keyof AuditModules; label: string }> = [
+const moduleLabels = [
   { key: "supplyChain", label: "供应链披露" },
   { key: "documentation", label: "文件记录" },
   { key: "childLabor", label: "童工与未成年工" },
@@ -334,37 +282,37 @@ const moduleLabels: Array<{ key: keyof AuditModules; label: string }> = [
   { key: "auditEthics", label: "审计伦理" },
 ];
 
-function cn(...classes: Array<string | false | null | undefined>) {
+function cn(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-function formatMoney(value: number) {
+function formatMoney(value) {
   return `¥${value.toFixed(2)}`;
 }
 
-function calcFabricCost(quote: Quote) {
+function calcFabricCost(quote) {
   return quote.fabrics.reduce((sum, item) => sum + item.unitCost * item.usage, 0);
 }
 
-function calcTotalQuote(quote: Quote) {
+function calcTotalQuote(quote) {
   return calcFabricCost(quote) + quote.laborCost + quote.accessoriesCost + quote.packagingCost;
 }
 
-function getModuleStatus(score: number): LightStatus {
+function getModuleStatus(score) {
   if (score >= 85) return "green";
   if (score >= 70) return "yellow";
   return "red";
 }
 
-function ScoreRing({ value, status }: { value: number; status: LightStatus }) {
+function ScoreRing({ value, status }) {
   const color =
     status === "green"
       ? "stroke-emerald-500"
       : status === "yellow"
-      ? "stroke-amber-500"
-      : status === "red"
-      ? "stroke-rose-500"
-      : "stroke-slate-400";
+        ? "stroke-amber-500"
+        : status === "red"
+          ? "stroke-rose-500"
+          : "stroke-slate-400";
 
   const circumference = 2 * Math.PI * 42;
   const offset = circumference - (value / 100) * circumference;
@@ -392,7 +340,7 @@ function ScoreRing({ value, status }: { value: number; status: LightStatus }) {
   );
 }
 
-function KPI({ title, value, hint, icon }: { title: string; value: string; hint: string; icon: React.ReactNode }) {
+function KPI({ title, value, hint, icon }) {
   return (
     <div className="rounded-[28px] border border-white/70 bg-white/78 p-5 shadow-[0_12px_40px_rgba(15,23,42,0.06)] backdrop-blur-xl">
       <div className="flex items-start justify-between gap-4">
@@ -407,7 +355,7 @@ function KPI({ title, value, hint, icon }: { title: string; value: string; hint:
   );
 }
 
-function FactoryCard({ item, onOpen }: { item: FactoryItem; onOpen: () => void }) {
+function FactoryCard({ item, onOpen }) {
   const meta = statusMeta[item.status];
   const total = calcTotalQuote(item.quote);
 
@@ -466,12 +414,12 @@ function FactoryCard({ item, onOpen }: { item: FactoryItem; onOpen: () => void }
 }
 
 export default function CostcoFactoryScoringQuoteDashboard() {
-  const [viewMode, setViewMode] = useState<ViewMode>("home");
+  const [viewMode, setViewMode] = useState("home");
   const [selectedProduct, setSelectedProduct] = useState(products[0].id);
   const [selectedFactoryId, setSelectedFactoryId] = useState(() => factoriesSeed.find((i) => i.product === products[0].id)?.id ?? "");
   const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState<"all" | LightStatus>("all");
-  const [sortBy, setSortBy] = useState<"score" | "price" | "leadTime">("score");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [sortBy, setSortBy] = useState("score");
 
   const currentProduct = products.find((p) => p.id === selectedProduct) ?? products[0];
 
@@ -497,7 +445,7 @@ export default function CostcoFactoryScoringQuoteDashboard() {
     const green = productFactories.filter((i) => i.status === "green").length;
     const yellow = productFactories.filter((i) => i.status === "yellow").length;
     const red = productFactories.filter((i) => i.status === "red").length;
-    const bestQuote = Math.min(...productFactories.map((i) => calcTotalQuote(i.quote)));
+    const bestQuote = productFactories.length ? Math.min(...productFactories.map((i) => calcTotalQuote(i.quote))) : 0;
     return { green, yellow, red, total: productFactories.length, bestQuote };
   }, [productFactories]);
 
@@ -532,7 +480,7 @@ export default function CostcoFactoryScoringQuoteDashboard() {
       ]
     : [];
 
-  const openDetails = (factoryId: string) => {
+  const openDetails = (factoryId) => {
     setSelectedFactoryId(factoryId);
     setViewMode("detail");
   };
@@ -640,7 +588,7 @@ export default function CostcoFactoryScoringQuoteDashboard() {
                       <div className="flex gap-3">
                         <select
                           value={statusFilter}
-                          onChange={(e) => setStatusFilter(e.target.value as typeof statusFilter)}
+                          onChange={(e) => setStatusFilter(e.target.value)}
                           className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm shadow-sm outline-none focus:border-sky-300"
                         >
                           <option value="all">全部状态</option>
@@ -651,7 +599,7 @@ export default function CostcoFactoryScoringQuoteDashboard() {
                         </select>
                         <select
                           value={sortBy}
-                          onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
+                          onChange={(e) => setSortBy(e.target.value)}
                           className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm shadow-sm outline-none focus:border-sky-300"
                         >
                           <option value="score">按审核评分</option>
@@ -813,7 +761,13 @@ export default function CostcoFactoryScoringQuoteDashboard() {
                             </span>
                           </div>
                           <div className="mt-3 h-2 rounded-full bg-slate-200">
-                            <div className={cn("h-2 rounded-full", item.status === "green" ? "bg-emerald-500" : item.status === "yellow" ? "bg-amber-500" : "bg-rose-500")} style={{ width: `${item.score}%` }} />
+                            <div
+                              className={cn(
+                                "h-2 rounded-full",
+                                item.status === "green" ? "bg-emerald-500" : item.status === "yellow" ? "bg-amber-500" : "bg-rose-500"
+                              )}
+                              style={{ width: `${item.score}%` }}
+                            />
                           </div>
                         </div>
                       ))}
@@ -833,10 +787,7 @@ export default function CostcoFactoryScoringQuoteDashboard() {
                             <span className="font-medium text-slate-900">{formatMoney(row.value)}</span>
                           </div>
                           <div className="h-2 rounded-full bg-slate-200">
-                            <div
-                              className="h-2 rounded-full bg-sky-500"
-                              style={{ width: `${(row.value / calcTotalQuote(selectedFactory.quote)) * 100}%` }}
-                            />
+                            <div className="h-2 rounded-full bg-sky-500" style={{ width: `${(row.value / calcTotalQuote(selectedFactory.quote)) * 100}%` }} />
                           </div>
                         </div>
                       ))}
